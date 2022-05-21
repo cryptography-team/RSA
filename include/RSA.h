@@ -26,6 +26,7 @@ private:
 public:
   RSA();
   pair<uint, uint> getPublicKey() const;
+  void setRandomKey();
   vector<uint> encrypt(const string &plain, const uint &e, const uint &n) const;
   string decrypt(const vector<uint> &cipher) const;
 };

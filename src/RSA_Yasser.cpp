@@ -29,11 +29,15 @@ void RSA::calculateExternals() {
 RSA::RSA()
     : randomGenerator(
           std::chrono::steady_clock::now().time_since_epoch().count()) {
-  calculateInternals();
-  calculateExternals();
+  setRandomKey();
 }
 
 pair<uint, uint> RSA::getPublicKey() const { return pair<uint, uint>(e, n); }
+
+void RSA::setRandomKey() {
+  calculateInternals();
+  calculateExternals();
+}
 
 vector<uint> RSA::encrypt(const string &plain, const uint &e,
                           const uint &n) const {
