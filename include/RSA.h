@@ -14,7 +14,7 @@ private:
 
   uint p, q, n, phi_n, e, d;
 
-  uint fastExponentiation(uint base, uint power) const;
+  uint fastExponentiation(uint base, uint power, uint mod) const;
   bool millerRabinIsPrime(uint num) const;
   int extendedEuclidean(int a, int b, int &x, int &y) const;
   void calculateInternals(); // calculates p, q, n, and phi_n
