@@ -9,7 +9,7 @@ uint RSA::fastExponentiation(uint base, uint power, uint mod) const {
     if (power & 1)
       res = (long long)res * base % mod;
     base = (long long)base * base % mod;
-    p >>= 1;
+    power >>= 1;
   }
   return res;
 }
