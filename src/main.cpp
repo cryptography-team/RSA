@@ -22,7 +22,7 @@ int main() {
   while (true) {
     cout
         << "  "
-           "================================================================\n";
+        << "================================================================\n";
     cout << "\tChoose one of the following options:\n";
     cout << "\t1- Encrypt a plain text\n";
     cout << "\t2- Decrypt a cipher text\n";
@@ -42,6 +42,7 @@ int main() {
       cout << "\tn = " << flush;
       int n;
       cin >> n;
+      cin.ignore();
       vector<unsigned int> cipher = tool.encrypt(plain, e, n);
       printText("cipher", cipher);
     } else if (choice == 2) {
@@ -54,7 +55,7 @@ int main() {
       cout << "\tThe key has been updated" << endl;
     } else if (choice == 4) {
       pair<unsigned int, unsigned int> pu = tool.getPublicKey();
-      cout << "\t{" << pu.first << ", " << pu.second << '}' << endl;
+      cout << "\t(e, n) = (" << pu.first << ", " << pu.second << ')' << endl;
     } else {
       break;
     }
