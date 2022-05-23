@@ -1,53 +1,73 @@
 #include "RSA.h"
+
 using std::uniform_int_distribution;
-mt19937 rng;
 
-bool RSA::millerRabinIsPrime(uint num) const {
-    int pNum = num -1 ,k =1, qPow = 1 , a;
-    for (int i =2; i*qPow == pNum;i*=2,k++)
-        if(pNum % i == 0 && pNum/i % 2 != 0)
-            qPow = p/i;
-    a =  uniform_int_distribution<int>(1, pNum)(rng);
-    for(int j = 0,i = 1 ; j <k ; j++,i*=2)
-        if(fastExponentiation(a,i*qPow,num) == pNum)
-        return true;
+bool RSA::millerRabinIsPrime(uint n) {
+  if (n == 2)
+    return true;
+  if (n < 2 || n % 2 == 0)
     return false;
+
+  uint num = n - 1, k = 0;
+  while (num % 2 == 0) {
+    k++;
+    num /= 2;
+  }
+  uint q = num;
+
+  uint a = uniform_int_distribution<int>(1, n - 1)(randomGenerator);
+  a = fastExponentiation(a, q, n);
+  if (a == 1)
+    return true;
+
+  for (uint j = 0; j < k; j++, a = (long long)a * a % n) {
+    if (a == n - 1)
+      return true;
+  }
+  return false;
 }
+
 int RSA::extendedEuclidean(int a, int b, int &x, int &y) const {
-     if (a == 0)
-    {
-        x = 0;
-        y = 1;
-        return b;
-    }
+  if (b == 0) {
+    x = 1;
+    y = 0;
+    return a;
+  }
 
-    int x1, y1;
-    int gcd = extendedEuclidean(b%a, a, x, y);
+  int gcd = extendedEuclidean(b, a % b, y, x);
 
-    x = y - (b/a) * x;
-    y = x;
+  y -= a / b * x;
 
-    return gcd;
+  return gcd;
 }
+
+uint RSA::getRandomPrimeNumber(const uint &start, const uint &end) {
+  uint num = 0;
+  while (num == 0) {
+    num = uniform_int_distribution<int>(start, end)(randomGenerator);
+    for (int i = 0; i < 10; i++)
+      if (!millerRabinIsPrime(num)) {
+        num = 0;
+        break;
+      }
+  }
+  return num;
+}
+
 void RSA::calculateInternals() {
-    bool pPrime=false , qPrime = false;
-    while(!pPrime || !qPrime)
-    {
-        if(!pPrime){
-            p = uniform_int_distribution<int>(1000, 10000)(randomGenerator);
-            if(p % 2 == 0)
-                p++;
-            pPrime = millerRabinIsPrime(p);
-        }
-        if(!qPrime){
-            q = uniform_int_distribution<int>(1000, 10000)(randomGenerator);
-            if(q % 2 == 0)
-                q++;
-            qPrime = millerRabinIsPrime(q);
-        }
+  p = getRandomPrimeNumber(100, 10000);
+  q = getRandomPrimeNumber((1 << 15) / p, (1 << 16) / p);
 
-    }
-    n = p * q;
-    phi_n = (p - 1) * (q - 1);
+  n = p * q;
+  phi_n = (p - 1) * (q - 1);
 }
-string RSA::decrypt(const vector<uint> &cipher) const {}
+
+string RSA::decrypt(const vector<uint> &cipher) const {
+  string plain;
+  for (uint c : cipher) {
+    c = fastExponentiation(c, d, n);
+    plain += char(c / 256);
+    plain += char(c % 256);
+  }
+  return plain;
+}
