@@ -15,8 +15,6 @@ template <typename T> void printText(const string &type, const T &text);
 int main() {
 
   RSA tool;
-  string plain;
-  vector<unsigned int> cipher;
 
   cout
       << "  ================================================================\n";
@@ -36,25 +34,27 @@ int main() {
     cin >> choice;
     cin.ignore();
     if (choice == 1) {
+      string plain;
       getText("plain", plain);
-      cout << "Set the public key:\n\te = " << flush;
+      cout << "\tSet the public key:\n\te = " << flush;
       int e;
       cin >> e;
       cout << "\tn = " << flush;
       int n;
       cin >> n;
-      cipher = tool.encrypt(plain, e, n);
+      vector<unsigned int> cipher = tool.encrypt(plain, e, n);
       printText("cipher", cipher);
     } else if (choice == 2) {
+      vector<unsigned int> cipher;
       getText("cipher", cipher);
-      plain = tool.decrypt(cipher);
+      string plain = tool.decrypt(cipher);
       printText("plain", plain);
     } else if (choice == 3) {
       tool.setRandomKey();
-      cout << "The key has been updated" << endl;
+      cout << "\tThe key has been updated" << endl;
     } else if (choice == 4) {
       pair<unsigned int, unsigned int> pu = tool.getPublicKey();
-      cout << '{' << pu.first << ", " << pu.second << '}' << endl;
+      cout << "\t{" << pu.first << ", " << pu.second << '}' << endl;
     } else {
       break;
     }
