@@ -28,5 +28,25 @@ int RSA::extendedEuclidean(int a, int b, int &x, int &y) const {
 
     return gcd;
 }
-void RSA::calculateInternals() {}
+void RSA::calculateInternals() {
+    bool pPrime=false , qPrime = false;
+    while(!pPrime || !qPrime)
+    {
+        if(!pPrime){
+            p = uniform_int_distribution<int>(1000, 10000)(randomGenerator);
+            if(p % 2 == 0)
+                p++;
+            pPrime = millerRabinIsPrime(p);
+        }
+        if(!qPrime){
+            q = uniform_int_distribution<int>(1000, 10000)(randomGenerator);
+            if(q % 2 == 0)
+                q++;
+            qPrime = millerRabinIsPrime(q);
+        }
+
+    }
+    n = p * q;
+    phi_n = (p - 1) * (q - 1);
+}
 string RSA::decrypt(const vector<uint> &cipher) const {}
