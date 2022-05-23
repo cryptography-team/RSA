@@ -18,8 +18,9 @@ private:
   mt19937 randomGenerator;
 
   uint fastExponentiation(uint base, uint power, uint mod) const;
-  bool millerRabinIsPrime(uint num) const;
+  bool millerRabinIsPrime(uint n);
   int extendedEuclidean(int a, int b, int &x, int &y) const;
+  uint getRandomPrimeNumber(const uint &start, const uint &end);
   void calculateInternals(); // calculates p, q, n, and phi_n
   void calculateExternals(); // calculates e and d
 
