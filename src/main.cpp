@@ -36,19 +36,41 @@ int main() {
     if (choice == 1) {
       string plain;
       getText("plain", plain);
-      cout << "\tSet the public key:\n\te = " << flush;
-      int e;
-      cin >> e;
-      cout << "\tn = " << flush;
-      int n;
-      cin >> n;
-      cin.ignore();
+      cout << "\tDo you want to set the public key yourself? (Y/n): " << flush;
+      char choice;
+      cin >> choice;
+      int e, n;
+      if (choice == 'n') {
+        pair<unsigned int, unsigned int> pu = tool.getPublicKey();
+        e = pu.first;
+        n = pu.second;
+      } else {
+        cout << "\tSet the public key:\n\te = " << flush;
+        cin >> e;
+        cout << "\tn = " << flush;
+        cin >> n;
+        cin.ignore();
+      }
       vector<unsigned int> cipher = tool.encrypt(plain, e, n);
       printText("cipher", cipher);
     } else if (choice == 2) {
       vector<unsigned int> cipher;
       getText("cipher", cipher);
-      string plain = tool.decrypt(cipher);
+      cout << "\tDo you want to set the private key yourself? (Y/n): " << flush;
+      char choice;
+      cin >> choice;
+      string plain;
+      if (choice == 'n')
+        plain = tool.decrypt(cipher);
+      else {
+        cout << "\tSet the private key:\n\td = " << flush;
+        int d, n;
+        cin >> d;
+        cout << "\tn = " << flush;
+        cin >> n;
+        cin.ignore();
+        plain = tool.decrypt(cipher, d, n);
+      }
       printText("plain", plain);
     } else if (choice == 3) {
       tool.setRandomKey();
@@ -81,6 +103,7 @@ template <typename T> unsigned int getline(istream &in, vector<T> &vec) {
   stringstream ss;
   ss << s;
   T num;
+  vec.clear();
   while (ss >> num)
     vec.push_back(num);
   return vec.size();
@@ -130,12 +153,10 @@ template <typename T> void printText(const string &type, const T &text) {
   cout << "\tPrint to a file? (y/N): " << flush;
   char ch;
   cin >> ch;
-  cin.ignore();
   if (ch == 'y') {
     cout << "\tEnter file name: " << flush;
     string tmp;
     cin >> tmp;
-    cin.ignore();
     ofstream out(tmp);
     out << text << endl;
   } else

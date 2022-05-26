@@ -63,6 +63,11 @@ void RSA::calculateInternals() {
 }
 
 string RSA::decrypt(const vector<uint> &cipher) const {
+  return decrypt(cipher, d, n);
+}
+
+string RSA::decrypt(const vector<uint> &cipher, const uint &d,
+                    const uint &n) const {
   string plain;
   for (uint c : cipher) {
     c = fastExponentiation(c, d, n);

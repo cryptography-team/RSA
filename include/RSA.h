@@ -30,6 +30,8 @@ public:
   void setRandomKey();
   vector<uint> encrypt(const string &plain, const uint &e, const uint &n) const;
   string decrypt(const vector<uint> &cipher) const;
+  string decrypt(const vector<uint> &cipher, const uint &d,
+                 const uint &n) const;
 };
 
 #endif
