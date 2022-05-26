@@ -62,10 +62,6 @@ void RSA::calculateInternals() {
   phi_n = (p - 1) * (q - 1);
 }
 
-string RSA::decrypt(const vector<uint> &cipher) const {
-  return decrypt(cipher, d, n);
-}
-
 string RSA::decrypt(const vector<uint> &cipher, const uint &d,
                     const uint &n) const {
   string plain;

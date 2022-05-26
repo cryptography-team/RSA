@@ -34,6 +34,8 @@ RSA::RSA()
 
 pair<uint, uint> RSA::getPublicKey() const { return pair<uint, uint>(e, n); }
 
+pair<uint, uint> RSA::getPrivateKey() const { return pair<uint, uint>(d, n); }
+
 void RSA::setRandomKey() {
   calculateInternals();
   calculateExternals();

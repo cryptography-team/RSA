@@ -28,6 +28,7 @@ int main() {
     cout << "\t2- Decrypt a cipher text\n";
     cout << "\t3- Set another random key\n";
     cout << "\t4- Get the current public key\n";
+    cout << "\t5- Get the current private key\n";
     cout << "\t*- Exit the program\n";
     cout << "\n\tYour choice is: " << flush;
     int choice;
@@ -39,6 +40,7 @@ int main() {
       cout << "\tDo you want to set the public key yourself? (Y/n): " << flush;
       char choice;
       cin >> choice;
+      cin.ignore();
       int e, n;
       if (choice == 'n') {
         pair<unsigned int, unsigned int> pu = tool.getPublicKey();
@@ -59,18 +61,20 @@ int main() {
       cout << "\tDo you want to set the private key yourself? (Y/n): " << flush;
       char choice;
       cin >> choice;
-      string plain;
-      if (choice == 'n')
-        plain = tool.decrypt(cipher);
-      else {
+      cin.ignore();
+      int d, n;
+      if (choice == 'n') {
+        pair<unsigned int, unsigned int> pr = tool.getPublicKey();
+        d = pr.first;
+        n = pr.second;
+      } else {
         cout << "\tSet the private key:\n\td = " << flush;
-        int d, n;
         cin >> d;
         cout << "\tn = " << flush;
         cin >> n;
         cin.ignore();
-        plain = tool.decrypt(cipher, d, n);
       }
+      string plain = tool.decrypt(cipher, d, n);
       printText("plain", plain);
     } else if (choice == 3) {
       tool.setRandomKey();
@@ -78,6 +82,9 @@ int main() {
     } else if (choice == 4) {
       pair<unsigned int, unsigned int> pu = tool.getPublicKey();
       cout << "\t(e, n) = (" << pu.first << ", " << pu.second << ')' << endl;
+    } else if (choice == 5) {
+      pair<unsigned int, unsigned int> pr = tool.getPrivateKey();
+      cout << "\t(d, n) = (" << pr.first << ", " << pr.second << ')' << endl;
     } else {
       break;
     }
